@@ -3,7 +3,7 @@ recipe: symfony
 config:
   php: 8.1
   webroot: public
-  database: postgres:15
+  database: postgres:14
   cache: redis
 services:
   appserver:
