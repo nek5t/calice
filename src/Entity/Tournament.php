@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Repository\TournamentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[ORM\Entity(repositoryClass: TournamentRepository::class)]
+#[UniqueEntity('slug')]
 class Tournament
 {
     #[ORM\Id]
@@ -22,6 +25,14 @@ class Tournament
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;
+
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    private ?string $slug = null;
+
+    public function __toString()
+    {
+        return $this->title;
+    }
 
     public function getId(): ?int
     {
@@ -60,6 +71,27 @@ class Tournament
     public function setTitle(string $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function computeSlug(SluggerInterface $slugger)
+    {
+        if (!$this->slug || '-' === $this->slug) {
+            $this->slug = (string) $slugger->slug((string)$this)->lower();
+        }
 
         return $this;
     }
