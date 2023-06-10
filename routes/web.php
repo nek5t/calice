@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [TournamentController::class, 'index']);
+Route::resource('tournaments', TournamentController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
